@@ -7,6 +7,7 @@ var indexRouter = require('./routes/index');
 var authRouter = require("./routes/auth");
 var mediaRouter = require("./routes/media");
 var storageRouter = require("./routes/storage");
+var albumRouter = require("./routes/album");
 
 var checkCookiesMiddleware = require("./middleware/check-cookies");
 
@@ -22,5 +23,6 @@ app.use('/api/v1', indexRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/media", checkCookiesMiddleware, mediaRouter);
 app.use("/api/v1/storage", checkCookiesMiddleware, storageRouter);
+app.use("/api/v1/album", checkCookiesMiddleware, albumRouter);
 
 module.exports = app;
