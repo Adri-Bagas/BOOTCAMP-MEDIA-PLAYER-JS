@@ -276,7 +276,7 @@ router.post(
   }
 );
 
-router.put(
+router.patch(
   "/update/:id",
   upload.fields([{ name: "thumbnail", maxCount: 1 }]),
   async function (req, res, next) {
@@ -312,7 +312,7 @@ router.put(
 
           if (fs.existsSync(oldFilePath)) {
             fs.unlinkSync(oldFilePath);
-            console.log(`Deleted old thumbnail: ${mediaData[0].thumbnail}`);
+            console.log(`Deleted: ${mediaData[0].thumbnail}`);
           }
         }
 
@@ -334,7 +334,7 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: "Media berhasil di update",
+        message: "Media berhasil diupdate",
         data: result[0],
       });
     } catch (error) {
@@ -346,5 +346,131 @@ router.put(
     }
   }
 );
+
+router.delete("/delete/:id", async function (req, res, next) {
+  try {
+    const id = req.params.id;
+
+    const result = await db
+      .update(mediaTable)
+      .set({
+        updated_at: sql`(current_timestamp)`,
+        delete_at: sql`(current_timestamp)`,
+      })
+      .where(eq(mediaTable.id, id))
+      .returning();
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Media tidak ditemukan!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Media berhasil dihapus",
+      data: result[0],
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Gagal hapus media!",
+    });
+  }
+});
+
+router.patch("/restore/:id", async function (req, res, next) {
+  try {
+    const id = req.params.id;
+
+    const result = await db
+      .update(mediaTable)
+      .set({
+        updated_at: sql`(current_timestamp)`,
+        delete_at: null,
+      })
+      .where(eq(mediaTable.id, id))
+      .returning();
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Media tidak ditemukan!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Media berhasil direstore",
+      data: result[0],
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Gagal restore media!",
+    });
+  }
+});
+
+router.delete("/purge/:id", async function (req, res, next) {
+  try {
+    const id = req.params.id;
+
+    const result = await db
+      .delete(mediaTable)
+      .where(eq(mediaTable.id, id))
+      .returning();
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Media tidak ditemukan!",
+      });
+    }
+
+    const mediaData = result[0];
+
+    if (mediaData.thumbnail) {
+      const oldThumbPath = path.join(
+        process.cwd(),
+        "storage/uploads/thumbnails",
+        mediaData.thumbnail
+      );
+
+      if (fs.existsSync(oldThumbPath)) {
+        fs.unlinkSync(oldThumbPath);
+        console.log(`Deleted: ${mediaData.thumbnail}`);
+      }
+    }
+
+    if (mediaData.filename) {
+      const oldFilePath = path.join(
+        process.cwd(),
+        `storage/uploads/${mediaData.type}s`,
+        mediaData.filename
+      );
+
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+        console.log(`Deleted ${mediaData.type}: ${mediaData.filename}`);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Media berhasil dihapus",
+      data: result[0],
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Gagal hapus media!",
+    });
+  }
+});
 
 module.exports = router;
