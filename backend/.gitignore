@@ -64,12 +64,4 @@ public/
 
 *.db
 
-storage/*.mp4
-storage/*.mov
-storage/*.mp3
-storage/*.wav
-storage/*.png
-storage/*.jpg
-storage/*.webp
-storage/*.jpeg
-storage/*.gif
+storage/*
