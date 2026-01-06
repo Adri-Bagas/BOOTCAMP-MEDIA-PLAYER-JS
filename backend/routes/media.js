@@ -43,7 +43,7 @@ const upload = multer({ storage });
 
 const sortByAlias = Object.freeze({
   media_name: mediaTable.name,
-  media_size: mediaTable.filetype,
+  media_size: mediaTable.size,
   uploded: mediaTable.updated_at,
 });
 
@@ -51,6 +51,7 @@ const sortByAlias = Object.freeze({
 router.get("/", async function (req, res, next) {
   const type = req.query.type;
   const searchTerm = req.query.search;
+
   const sort = req.query.sort;
   const sort_by = req.query.sort_by;
 
@@ -302,6 +303,19 @@ router.put(
       };
 
       if (thumbFile) {
+        if (mediaData[0].thumbnail) {
+          const oldFilePath = path.join(
+            process.cwd(),
+            "storage/uploads/thumbnails",
+            mediaData[0].thumbnail
+          );
+
+          if (fs.existsSync(oldFilePath)) {
+            fs.unlinkSync(oldFilePath);
+            console.log(`Deleted old thumbnail: ${mediaData[0].thumbnail}`);
+          }
+        }
+
         updateData.thumbnail = thumbFile.filename;
       }
 
