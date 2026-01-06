@@ -1,10 +1,10 @@
-import 'dotenv/config';
-import { defineConfig } from 'drizzle-kit';
+require("dotenv/config");
+const { defineConfig } = require("drizzle-kit");
 
-export default defineConfig({
-  out: './drizzle',
-  schema: './db/schema.js',
-  dialect: 'sqlite',
+module.exports = defineConfig({
+  out: "./drizzle",
+  schema: "./db/schema.js",
+  dialect: "sqlite",
   dbCredentials: {
     url: process.env.DB_FILE_NAME,
   },
