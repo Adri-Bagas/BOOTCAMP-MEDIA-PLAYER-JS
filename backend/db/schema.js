@@ -1,7 +1,7 @@
-import { sql } from "drizzle-orm";
-import { int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+const { sql } = require("drizzle-orm");
+const { int, integer, sqliteTable, text } = require("drizzle-orm/sqlite-core");
 
-export const mediaTable = sqliteTable("medias", {
+const mediaTable = sqliteTable("medias", {
   id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   filename: text().notNull(),
@@ -18,7 +18,7 @@ export const mediaTable = sqliteTable("medias", {
   delete_at: text(),
 });
 
-export const albumTable = sqliteTable("albums", {
+const albumTable = sqliteTable("albums", {
   id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   description: text().notNull(),
@@ -29,3 +29,8 @@ export const albumTable = sqliteTable("albums", {
   updated_at: text(),
   delete_at: text(),
 });
+
+module.exports = {
+  mediaTable,
+  albumTable,
+};
