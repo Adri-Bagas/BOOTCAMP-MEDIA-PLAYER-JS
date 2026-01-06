@@ -10,6 +10,7 @@ const dirs = [
   "storage/uploads/thumbnails",
   "storage/uploads/images",
   "storage/uploads/audios",
+  "storage/uploads/covers",
 ];
 dirs.forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -18,6 +19,7 @@ dirs.forEach(dir => {
 var indexRouter = require('./routes/index');
 var authRouter = require("./routes/auth");
 var mediaRouter = require("./routes/media");
+var albumRouter = require("./routes/album");
 
 var checkCookiesMiddleware = require("./middleware/check-cookies");
 
@@ -32,5 +34,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1', indexRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/media", checkCookiesMiddleware, mediaRouter);
+app.use("/api/v1/album", checkCookiesMiddleware, albumRouter);
 
 module.exports = app;

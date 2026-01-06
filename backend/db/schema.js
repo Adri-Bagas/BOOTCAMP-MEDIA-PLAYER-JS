@@ -22,7 +22,7 @@ export const albumTable = sqliteTable("albums", {
   id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   description: text().notNull(),
-  cover: text().notNull(),
+  cover: text(),
   created_at: text()
     .notNull()
     .default(sql`(current_timestamp)`),

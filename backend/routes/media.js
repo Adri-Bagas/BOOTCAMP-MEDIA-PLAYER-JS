@@ -67,8 +67,8 @@ router.get("/", async function (req, res, next) {
     )
     .orderBy(
       sort == "desc"
-        ? desc(sort_by ? sortByAlias[sort_by] : mediaTable.created_at)
-        : asc(sort_by ? sortByAlias[sort_by] : mediaTable.created_at)
+        ? desc(sort_by ? sortByAlias[sort_by] : mediaTable.updated_at)
+        : asc(sort_by ? sortByAlias[sort_by] : mediaTable.updated_at)
     );
 
   res.status(200).json({
@@ -84,7 +84,7 @@ router.get("/:id", async function (req, res, next) {
   const result = await db
     .select()
     .from(mediaTable)
-    .where(eq(mediaTable.id, id));
+    .where(and(eq(mediaTable.id, id), isNull(mediaTable.delete_at)));
 
   res.status(200).json({
     message: "Media berhasil di ambil!",
@@ -99,7 +99,7 @@ router.get("/get/:id", async function (req, res, next) {
   const [result] = await db
     .select()
     .from(mediaTable)
-    .where(eq(mediaTable.id, id));
+    .where(and(eq(mediaTable.id, id), isNull(mediaTable.delete_at)));
 
   const filePath = path.join(
     process.cwd(),
@@ -122,7 +122,7 @@ router.get("/get/thumbnail/:id", async function (req, res, next) {
   const [result] = await db
     .select()
     .from(mediaTable)
-    .where(eq(mediaTable.id, id));
+    .where(and(eq(mediaTable.id, id), isNull(mediaTable.delete_at)));
 
   if (!result.thumbnail && (result.type == "video" || result.type == "audio")) {
     return res.status(404).send("File tidak mempunyai thumbnail");
@@ -287,7 +287,7 @@ router.patch(
       const mediaData = await db
         .select()
         .from(mediaTable)
-        .where(eq(mediaTable.id, id));
+        .where(and(eq(mediaTable.id, id), isNull(mediaTable.delete_at)));
 
       if (mediaData.length === 0) {
         return res.status(404).json({
