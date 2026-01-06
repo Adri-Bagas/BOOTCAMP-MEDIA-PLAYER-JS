@@ -66,6 +66,22 @@ router.get("/", async function (req, res, next) {
   });
 });
 
+router.get("/selection", async function (req, res, next) {
+  const result = await db
+    .select({
+      id: albumTable.id,
+      name: albumTable.name,
+    })
+    .from(albumTable)
+    .where(isNull(albumTable.delete_at));
+
+  res.status(200).json({
+    message: "Album berhasil di ambil!",
+    success: true,
+    data: result,
+  });
+});
+
 router.post(
   "/",
   upload.fields([{ name: "cover", maxCount: 1 }]),
@@ -116,12 +132,7 @@ router.get("/show/:id", async function (req, res, next) {
   const medias = await db
     .select()
     .from(mediaTable)
-    .where(
-      and(
-        eq(mediaTable.album_id, id), 
-        isNull(mediaTable.delete_at)
-      )
-    );
+    .where(and(eq(mediaTable.album_id, id), isNull(mediaTable.delete_at)));
 
   res.status(200).json({
     message: "Album berhasil di ambil!",
@@ -221,6 +232,5 @@ router.patch(
     }
   }
 );
-
 
 module.exports = router;
