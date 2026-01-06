@@ -5,7 +5,12 @@ var logger = require('morgan');
 var fs = require('fs');
 
 // Ensure directories exist
-const dirs = ["storage/uploads/videos", "storage/uploads/thumbnails"];
+const dirs = [
+  "storage/uploads/videos",
+  "storage/uploads/thumbnails",
+  "storage/uploads/images",
+  "storage/uploads/audios",
+];
 dirs.forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
@@ -13,7 +18,6 @@ dirs.forEach(dir => {
 var indexRouter = require('./routes/index');
 var authRouter = require("./routes/auth");
 var mediaRouter = require("./routes/media");
-var storageRouter = require("./routes/storage");
 
 var checkCookiesMiddleware = require("./middleware/check-cookies");
 
@@ -28,6 +32,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1', indexRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/media", checkCookiesMiddleware, mediaRouter);
-app.use("/api/v1/storage", checkCookiesMiddleware, storageRouter);
 
 module.exports = app;

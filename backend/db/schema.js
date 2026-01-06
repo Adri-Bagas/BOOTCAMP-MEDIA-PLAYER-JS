@@ -7,6 +7,7 @@ export const mediaTable = sqliteTable("medias", {
   filename: text().notNull(),
   type: text().notNull(),
   filetype: text().notNull(),
+  fileSize: int().notNull(),
   thumbnail: text(),
   album_id: int(),
   is_favorite: integer({ mode: "boolean" }).default(false),
