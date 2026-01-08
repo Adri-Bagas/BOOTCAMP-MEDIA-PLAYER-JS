@@ -1,15 +1,10 @@
 var express = require("express");
 const { db } = require("../db");
 const { mediaTable } = require("../db/schema");
-const { like, sql } = require("drizzle-orm");
-const { and } = require("drizzle-orm");
+const { like, sql, and, asc, desc, isNull, eq } = require("drizzle-orm");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const { asc } = require("drizzle-orm");
-const { desc } = require("drizzle-orm");
-const { isNull } = require("drizzle-orm");
-const { eq } = require("drizzle-orm");
 
 var router = express.Router();
 
