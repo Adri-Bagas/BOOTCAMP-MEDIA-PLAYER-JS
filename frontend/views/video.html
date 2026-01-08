@@ -108,12 +108,6 @@
       </div>
       <div id="mediaGrid" class="mp-media-grid"></div>
 
-      <div id="mediaEmpty" class="mp-media-empty" style="display:none;">
-        <div class="mp-media-empty-icon">🎬</div>
-        <h3>No media found</h3>
-        <p>Add videos or images to see them here</p>
-      </div>
-
     </section>
   </main>
 
@@ -189,22 +183,12 @@
 
     // get data
     const mediaGrid = document.getElementById("mediaGrid");
-    const mediaEmpty = document.getElementById("mediaEmpty");
 
     function fetchData() {
       fetch("http://localhost:3000/api/v1/media?type=video")
         .then(res => res.json())
         .then(result => {
           const medias = result.data;
-
-          if (!medias || medias.length === 0) {
-            mediaGrid.style.display = "none";
-            mediaEmpty.style.display = "block";
-            return;
-          }
-
-          mediaEmpty.style.display = "none";
-          mediaGrid.style.display = "grid";
 
           mediaGrid.innerHTML = medias.map(media => `
             <div class="mp-media-card" data-id="${media.id}">

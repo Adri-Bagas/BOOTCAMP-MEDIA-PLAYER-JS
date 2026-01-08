@@ -53,9 +53,8 @@
 
         // sortcut
         document.addEventListener('keydown', (e) => {
+            e.preventDefault();
             if (e.code === 'Space') {
-                e.preventDefault();
-
                 if (player.paused()) {
                     player.play();
                 } else {
@@ -64,8 +63,6 @@
             }
 
             if (e.code === 'Escape') {
-                e.preventDefault();
-
                 window.history.back();
             }
         });
