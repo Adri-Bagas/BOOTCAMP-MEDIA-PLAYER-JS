@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player</title>
+    <link href="https://vjs.zencdn.net/8.23.4/video-js.css" rel="stylesheet" />
+</head>
+<style>
+    *,
+    body,
+    html {
+        padding: 0px;
+        margin: 0px;
+        overflow: hidden;
+    }
+</style>
+
+<body>
+    <video id="my-video" class="video-js vjs-default-skin" controls preload="metadata" playsinline
+        style="width:100vw;height:100vh"></video>
+
+
+    <script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const mediaId = params.get('id');
+
+        if (!mediaId) {
+            alert('Media tidak ditemukan!');
+            throw new Error('Media missing');
+        }
+
+        const streamUrl = `http://localhost:3000/api/v1/media/get/${mediaId}`;
+        const thumbnailUrl = `http://localhost:3000/api/v1/media/get/thumbnail/${mediaId}`;
+
+        const player = videojs('my-video', {
+            controlBar: {
+                pictureInPictureToggle: false
+            },
+            poster: thumbnailUrl
+        });
+
+        player.src({
+            src: streamUrl,
+            type: 'video/mp4'
+        });
+
+        player.ready(() => {
+            player.play();
+        });
+
+        // sortcut
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+
+                if (player.paused()) {
+                    player.play();
+                } else {
+                    player.pause();
+                }
+            }
+
+            if (e.code === 'Escape') {
+                e.preventDefault();
+
+                window.history.back();
+            }
+        });
+
+    </script>
+</body>
+
+</html>

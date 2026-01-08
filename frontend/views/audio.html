@@ -37,9 +37,9 @@
         <ul class="sub-menu">
           <div>
             <li><a href="all-media.html">All Media</a></li>
-            <li class="active"><a href="video.html">Video</a></li>
+            <li><a href="video.html">Video</a></li>
             <li><a href="foto.html">Foto</a></li>
-            <li><a href="audio.html">Audio</a></li>
+            <li class="active"><a href="audio.html">Audio</a></li>
           </div>
         </ul>
       </li>
@@ -65,7 +65,7 @@
   </nav>
   <main>
     <section class="top-nav">
-      <span class="title-menu">Video</span>
+      <span class="title-menu">Audio</span>
       <a href="#open-modal" class="button-add">
         <svg aria-hidden="true" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" fill="none"
           xmlns="http://www.w3.org/2000/svg">
@@ -111,7 +111,7 @@
       <div id="mediaEmpty" class="mp-media-empty" style="display:none;">
         <div class="mp-media-empty-icon">🎬</div>
         <h3>No media found</h3>
-        <p>Add videos or images to see them here</p>
+        <p>Add Audio to see them here</p>
       </div>
 
     </section>
@@ -121,16 +121,16 @@
     <div>
       <a href="#" title="Close" class="modal-close">Close</a>
       <h1>
-        Tambah Video Baru!
+        Tambah Audio Baru!
       </h1>
       <form id="form">
         <div class="input_container">
-          <label class="input_label">Video File</label>
+          <label class="input_label">Audio File</label>
 
           <div class="file_input_wrapper">
-            <input type="file" id="video_file" name="video" class="file_input" accept="video/*" required />
-            <label for="video_file" class="file_button">
-              Pilih File Video
+            <input type="file" id="audio_file" name="audio" accept="audio/*" class="file_input" required />
+            <label for="audio_file" class="file_button">
+              Pilih File audio
             </label>
             <span class="file_name" id="file_name">
               Belum ada file dipilih
@@ -138,12 +138,12 @@
           </div>
         </div>
         <div class="input_container">
-          <label class="input_label">Thumbnail Video</label>
+          <label class="input_label">Thumbnail Audio</label>
 
           <div class="file_input_wrapper">
             <input type="file" id="thumbnail_file" name="thumbnail" class="file_input" accept="image/*" required />
             <label for="thumbnail_file" class="file_button">
-              Pilih Thumbnail Video
+              Pilih Thumbnail Audio
             </label>
             <span class="file_name" id="thumbnail_name">
               Belum ada thumbnail dipilih
@@ -151,13 +151,13 @@
           </div>
         </div>
         <div class="input_container">
-          <label for="name" class="input_label">Nama Video</label>
+          <label for="name" class="input_label">Nama Audio</label>
           <input id="name" class="input_field" type="text" name="name" title="Name" required
-            placeholder="Masukan Nama Video">
+            placeholder="Masukan Nama Audio">
         </div>
         <div class="modal-footer">
           <a href="#" class="btn-secondary" type="button">Cancel</a>
-          <button class="btn-primary" type="submit">Upload Video</button>
+          <button class="btn-primary" type="submit">Upload Audio</button>
         </div>
       </form>
     </div>
@@ -165,7 +165,7 @@
 
   <script>
     // req input
-    const fileInput = document.getElementById("video_file");
+    const fileInput = document.getElementById("audio_file");
     const fileName = document.getElementById("file_name");
 
     fileInput.addEventListener("change", () => {
@@ -191,8 +191,8 @@
     const mediaGrid = document.getElementById("mediaGrid");
     const mediaEmpty = document.getElementById("mediaEmpty");
 
-    function fetchData() {
-      fetch("http://localhost:3000/api/v1/media?type=video")
+    function fetchData(params) {
+      fetch("http://localhost:3000/api/v1/media?type=audio")
         .then(res => res.json())
         .then(result => {
           const medias = result.data;
@@ -219,7 +219,7 @@
 
                 <ul class="mp-media-dropdown">
                   <li class="mp-action-move">Pindahkan ke folder</li>
-                  <li class="mp-action-delete" onClick="deleteVideo(${media.id})">Hapus</li>
+                  <li class="mp-action-delete" onClick="deleteAudio(${media.id})">Hapus</li>
                 </ul>
               </div>
               <a href="player.html?id=${media.id}">
@@ -260,7 +260,7 @@
       const formData = new FormData(form);
 
       try {
-        const response = await fetch("http://localhost:3000/api/v1/media/store/video", {
+        const response = await fetch("http://localhost:3000/api/v1/media/store/audio", {
           method: "POST",
           body: formData
         });
@@ -284,8 +284,8 @@
 
 
     // delete
-    async function deleteVideo(id) {
-      confirm("Apakah kamu yakin ingin menghapus video ini?")
+    async function deleteAudio(id) {
+      confirm("Apakah kamu yakin ingin menghapus audio ini?")
       try {
         const response = await fetch(`http://localhost:3000/api/v1/media/delete/${id}`, {
           method: "DELETE",
