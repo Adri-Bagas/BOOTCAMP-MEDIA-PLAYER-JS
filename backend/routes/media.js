@@ -234,16 +234,22 @@ router.post(
 
 router.post(
   "/store/audio",
-  upload.fields([{ name: "audio", maxCount: 1 }]),
+  upload.fields([
+    { name: "audio", maxCount: 1 },
+    { name: "thumbnail", maxCount: 1 },
+  ]),
   async function (req, res, next) {
     try {
       const audioFile = req.files["audio"]?.[0];
+      const thumbFile = req.files["thumbnail"]?.[0];
 
       if (!audioFile) {
         return res
           .status(400)
           .json({ success: false, message: "Audio is required" });
       }
+
+      let finalThumbnailName = thumbFile ? thumbFile.filename : null;
 
       const [inserted] = await db
         .insert(mediaTable)
